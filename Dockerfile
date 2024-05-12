@@ -1,0 +1,76 @@
+# Use a base image with necessary dependencies
+FROM python:3.10
+
+# Set non-interactive environment variable
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install python and java
+RUN apt-get update && apt-get install -y \
+    wget \
+    sudo \
+    python3-pip \
+    default-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create a new user named "kafka"
+RUN useradd -m kafka && \
+    echo "kafka ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Switch to the newly created user
+USER kafka
+
+# Set the working directory to the home directory of the kafka user
+WORKDIR /home/kafka
+
+# Download Kafdrop
+RUN wget -q https://github.com/obsidiandynamics/kafdrop/releases/download/4.0.1/kafdrop-4.0.1.jar
+
+# Download and extract Kafka
+RUN wget -q https://archive.apache.org/dist/kafka/3.1.0/kafka_2.12-3.1.0.tgz && \
+    tar -xzf kafka_2.12-3.1.0.tgz && \
+    rm kafka_2.12-3.1.0.tgz
+
+# Add lines to server.properties
+RUN echo "delete.topic.enable=true" >> /home/kafka/kafka_2.12-3.1.0/config/server.properties && \
+    echo "log.dirs=/home/kafka/logs" >> /home/kafka/kafka_2.12-3.1.0/config/server.properties
+
+# Install necessary Python packages
+RUN sudo pip install kafka-python-ng && \
+    sudo pip install apache-flink==1.18.1
+
+# Download flink, sed to see outside container
+RUN wget https://dlcdn.apache.org/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz && \ 
+    tar -xzf flink-1.18.1-bin-scala_2.12.tgz && \
+    rm flink-1.18.1-bin-scala_2.12.tgz && \
+    sed -i 's/bind-address: localhost/bind-address: 0.0.0.0/' flink-1.18.1/conf/flink-conf.yaml
+
+# Download SQL connector kafka for alarm.py
+RUN wget https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.1.0-1.18/flink-sql-connector-kafka-3.1.0-1.18.jar
+
+# Expose port for Kafdrop and Flink Web UI
+EXPOSE 9000 8081
+
+RUN pip install --upgrade pip
+
+RUN pip install tensorflow[and-cuda]==2.16.1
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin && \
+    sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
+    wget https://developer.download.nvidia.com/compute/cuda/12.3.2/local_installers/cuda-repo-wsl-ubuntu-12-3-local_12.3.2-1_amd64.deb && \
+    sudo dpkg -i cuda-repo-wsl-ubuntu-12-3-local_12.3.2-1_amd64.deb && \
+    sudo cp /var/cuda-repo-wsl-ubuntu-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/ && \
+    sudo apt-get update && \
+    sudo apt-get -y install cuda-toolkit-12-3 && \
+    rm cuda-repo-wsl-ubuntu-12-3-local_12.3.2-1_amd64.deb
+
+ENV CUDNN_PATH="/home/kafka/.local/lib/python3.10/site-packages/nvidia/cudnn"
+ENV LD_LIBRARY_PATH="/home/kafka/.local/lib/python3.10/site-packages/nvidia/cudnn/lib:/usr/local/cuda/lib64"
+  
+    
+# Copy code and conf for service
+COPY kafka.service zookeeper.service /etc/systemd/system/
+#COPY data_generator1.py producent.py alarm.py entrypoint.sh entrypoint_only_services.sh /home/kafka/
+COPY entrypoint.sh entrypoint_only_services.sh /home/kafka/
+
+# Define the entrypoint
+ENTRYPOINT ["/home/kafka/entrypoint_only_services.sh"]
