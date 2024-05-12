@@ -55,7 +55,7 @@ export CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.
 export LD_LIBRARY_PATH="$CUDNN_PATH/lib":"/usr/local/cuda/lib64"
 ```
 ## Check Path
-    ```sh
+```sh
     echo $CUDNN_PATH &&\
     ls $CUDNN_PATH &&\
     echo $LD_LIBRARY_PATH

@@ -37,9 +37,8 @@ This is module used by producent.py. It generates transactions for provided user
 gen_user.py
 ```
 Generation of transaction on kafka topic. Main simulator of transactions. Generates defined sequences of transactions with fraud and without it.
-```
+```sh
 python3 producent.py
-
 ```
 ## PyFlink
 This is prefered vesrion of running program, beacuse flink web app runnig locally will see this as a task
