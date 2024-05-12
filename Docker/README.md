@@ -13,9 +13,9 @@ With starting only service
 docker pull sarna320/kafka-pyflink:latest-only_services
 ```
 
-With starting service and scripts
+With starting service and scripts, not pushed yet
 ```sh
-docker pull sarna320/kafka-pyflink-image:latest
+docker pull sarna320/kafka-pyflink:latest
 ```
 
 ### Building
@@ -35,7 +35,6 @@ docker build -t sarna320/kafka-pyflink-image:latest -f Docker/Dockerfile_no_tens
 ```
 
 ### Containers
-
 ```sh
 docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-tf-container -v ${PWD}/code/:/home/kafka/code/ sarna320/kafka-pyflink-tensorflow:latest
 ```
@@ -43,7 +42,8 @@ docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-tf-cont
 ```sh
 docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-container -v ${PWD}/code/:/home/kafka/code/ sarna320/kafka-pyflink:latest-only_services
 ```
+
 ### Bash 
 ```sh
-docker exec -it kafka-pyflink-tf-container bash
+docker exec -it kafka-pyflink-container bash
 ```
