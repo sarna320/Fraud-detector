@@ -1,32 +1,3 @@
-## Docker
-On wsl need install https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
-Starting container will run all services and scripts
-
-### Pulling
-```sh
-docker pull kafka-pyflink-tensorflow:latest
-```
-
-### Building
-```sh
-docker build -t sarna320/kafka-pyflink-tensorflow:latest .
-```
-
-### Container with path to mount
-```sh
-docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-tf-container -v ${PWD}/code/:/home/kafka/code/ sarna320/kafka-pyflink-tensorflow:latest
-```
-
-### Container
-```sh
-docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-tf-container sarna320/kafka-pyflink-tensorflow:latest
-```
-
-### Bash 
-```sh
-docker exec -it kafka-pyflink-tf-container bash
-```
-
 ## Data generator
 Generation of users with cards. Need to run if there is no users_with_cards.json or you want diffrent users.
 ```
