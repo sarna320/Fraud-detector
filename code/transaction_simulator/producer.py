@@ -16,9 +16,6 @@ producer = KafkaProducer(bootstrap_servers=["localhost:9092"], value_serializer=
 topic = "Transactions"
 
 
-
-
-
 def send_fraud_location_message():
     
     num = random.randint(1, 8)
@@ -72,6 +69,7 @@ def send_normal_sequence():
     for message in messages:
         producer.send(topic, message)   
 
+
 if __name__ == "__main__":
     fraud_functions = [
         {"function": send_fraud_location_message, "print_message": "!!!Sending fraud location message!!!"},
@@ -79,13 +77,16 @@ if __name__ == "__main__":
         {"function": send_similiar_to_fraud_sequence, "print_message": "!!!Sending similar to fraud sequence!!!"},
         {"function": send_very_big_in_normal_fraud_sequence, "print_message": "!!!Sending very big in normal fraud sequence!!!"}
     ]
+    
     with open("users_with_cards.json", "r") as f:
         users_with_cards = json.load(f)
     number_of_cards=0
+    
     for user in users_with_cards:
     # Policz ilość kart dla każdego użytkownika
         number_of_cards += len(user["cards"])
     print(f"Number of cards: {number_of_cards}")
+    
     while True:
         if random.random()<0.2:
             selected_function = random.choice(fraud_functions)
