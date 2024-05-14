@@ -16,7 +16,7 @@ producer = KafkaProducer(bootstrap_servers=["localhost:9092"], value_serializer=
 topic = "Transactions"
 
 
-def send_fraud_location_message():
+def send_fraud_location_sequence():
     
     num = random.randint(1, 8)
     messages = generate_message(type=2, number_of_transactions=num)
@@ -72,7 +72,7 @@ def send_normal_sequence():
 
 if __name__ == "__main__":
     fraud_functions = [
-        {"function": send_fraud_location_message, "print_message": "!!!Sending fraud location message!!!"},
+        {"function": send_fraud_location_sequence, "print_message": "!!!Sending fraud location sequence!!!"},
         {"function": send_fraud_sequence, "print_message": "!!!Sending fraud sequence!!!"},
         {"function": send_similiar_to_fraud_sequence, "print_message": "!!!Sending similar to fraud sequence!!!"},
         {"function": send_very_big_in_normal_fraud_sequence, "print_message": "!!!Sending very big in normal fraud sequence!!!"}
