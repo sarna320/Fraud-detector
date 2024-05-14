@@ -38,9 +38,14 @@ def generate_fraud_location():
     longitude = round(random.uniform(-180, 180), 6)
     return latitude, longitude
 
+def random_user_card():
+    with open("users_with_cards.json", "r") as f:
+        users_with_cards = json.load(f)
+    selected_user = random.choice(users_with_cards)
+    selected_card = random.choice(selected_user["cards"])
+    return selected_user, selected_card
 
-
-def generate_message(selected_user,selected_card,type=None, fraud_location=0,number_of_transactions=1) -> dict:
+def generate_message(type=None, fraud_location=0,number_of_transactions=1) -> dict:
     """
     Generates random transactions for selected users from a JSON file.
 
@@ -60,7 +65,7 @@ def generate_message(selected_user,selected_card,type=None, fraud_location=0,num
     Returns:
         list: A list containing transaction details.
     """
-    
+    selected_user, selected_card=random_user_card()
     transactions = []
     for _ in range(number_of_transactions):
     # Location fraud
@@ -85,6 +90,7 @@ def generate_message(selected_user,selected_card,type=None, fraud_location=0,num
         transaction = {
             "user_id": selected_user["user_id"],
             "card_id": selected_card["card_id"],
+            "card_limit": selected_card["available_limit"],
             "latitude": latitude,
             "longitude": longitude,
             "transaction_value": transaction_value,
