@@ -45,7 +45,7 @@ def random_user_card():
     selected_card = random.choice(selected_user["cards"])
     return selected_user, selected_card
 
-def generate_message(type=None, fraud_location=0,number_of_transactions=1) -> dict:
+def generate_message(user,card,type=None, fraud_location=0,number_of_transactions=1,) -> dict:
     """
     Generates random transactions for selected users from a JSON file.
 
@@ -65,7 +65,8 @@ def generate_message(type=None, fraud_location=0,number_of_transactions=1) -> di
     Returns:
         list: A list containing transaction details.
     """
-    selected_user, selected_card=random_user_card()
+    selected_user=user 
+    selected_card=card
     transactions = []
     for _ in range(number_of_transactions):
     # Location fraud
