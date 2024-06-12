@@ -48,7 +48,7 @@ RUN wget https://dlcdn.apache.org/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12
 RUN wget https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.1.0-1.18/flink-sql-connector-kafka-3.1.0-1.18.jar
 
 # Expose port for Kafdrop and Flink Web UI
-EXPOSE 9000 8081
+EXPOSE 9000 8081 9092
   
 # Copy code and conf for service
 COPY kafka.service zookeeper.service /etc/systemd/system/

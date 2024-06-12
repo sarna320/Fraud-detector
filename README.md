@@ -10,7 +10,7 @@ docker pull sarna320/kafka-pyflink:latest-only_services
 - Clone repo
 - After clone in repo
 ```sh
-docker run --gpus all -d -p 9000:9000 -p 8081:8081 --name  kafka-pyflink-container -v ${PWD}/code/:/home/kafka/code/ sarna320/kafka-pyflink:latest-only_services
+docker run -d -p 9000:9000 -p 8081:8081 -p 9092:9092 --name  kafka-pyflink-container -v ${PWD}/code/:/home/kafka/code/ sarna320/kafka-pyflink:latest-only_services
 ```
 - After all services started
 ```sh

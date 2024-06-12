@@ -27,7 +27,7 @@ def send_fraud_location_sequence():
     num = random.randint(1, 8)
     messages = generate_message(user, card, type=2, number_of_transactions=num)
     messages += generate_message(user, card, fraud_location=1,type=2)
-    messages += generate_message(user, card, type=2, number_of_transactions=10 - 1 - num)
+    messages += generate_message(user, card, type=2, number_of_transactions=50 - 1 - num)
     for message in messages:
         producer.send(topic, message)
 
@@ -41,7 +41,7 @@ def send_fraud_sequence():
     messages = generate_message(user, card, type=2, number_of_transactions=num)
     messages += generate_message(user, card, type=1)
     messages += generate_message(user, card, type=3)
-    messages += generate_message(user, card, type=2, number_of_transactions=10 - 2 - num)
+    messages += generate_message(user, card, type=2, number_of_transactions=50 - 2 - num)
     for message in messages:
         producer.send(topic, message)
 
@@ -55,7 +55,7 @@ def send_similiar_to_fraud_sequence():
     messages += generate_message(user, card, type=1)
     messages += generate_message(user, card, type=2)
     messages += generate_message(user, card, type=3)
-    messages += generate_message(user, card, type=2, number_of_transactions=10 - 3 - num)
+    messages += generate_message(user, card, type=2, number_of_transactions=50 - 3 - num)
     for message in messages:
         producer.send(topic, message)
 
@@ -66,7 +66,7 @@ def send_very_big_in_normal_fraud_sequence():
     num = random.randint(1, 6)
     messages = generate_message(user, card, type=2, number_of_transactions=num)
     messages += generate_message(user, card, type=4)
-    messages += generate_message(user, card, type=2, number_of_transactions=10 - 1 - num)
+    messages += generate_message(user, card, type=2, number_of_transactions=50 - 1 - num)
     for message in messages:
         producer.send(topic, message)   
         
@@ -74,7 +74,7 @@ def send_normal_sequence():
     user, card = random_user_card()  
     num = random.randint(1, 9)
     messages = generate_message(user, card, type=2, number_of_transactions=num)
-    messages += generate_message(user, card, type=3, number_of_transactions=10 - num)
+    messages += generate_message(user, card, type=3, number_of_transactions=50 - num)
     random.shuffle(messages)
     for message in messages:
         producer.send(topic, message)   
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     print(f"Number of cards: {number_of_cards}")
     
     while True:
-        if random.random()<0.2:
+        if random.random()>0.5:
             selected_function = random.choice(fraud_functions)
             print(selected_function["print_message"])
             selected_function = selected_function["function"]
@@ -106,6 +106,6 @@ if __name__ == "__main__":
         else:
             send_normal_sequence()
             print("Sending normal sequence")
-        time.sleep(random.random()*3)
+        time.sleep(random.random()*0.3)
             
          

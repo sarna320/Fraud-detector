@@ -12,7 +12,7 @@ def generate_normal_value():
 
 
 def generate_large_value():
-    return round(random.uniform(500, 1000), 2)
+    return round(random.uniform(5000, 10000), 2)
 
 
 def generate_very_large_value():
