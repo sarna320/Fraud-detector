@@ -37,9 +37,9 @@ python3 consumer.py
 ## PyFlink
 This is prefered vesrion of running program, beacuse flink web app runnig locally will see this as a task
 ```
-./flink-1.18.1/bin/flink run -py alarm.py
+~/flink-1.18.1/bin/flink run -py ~/code/alarm.py 
 ```
 This will work, but it will not be detected by flink web app
 ```
-python3 alarm.py
+python3 ~/code/alarm.py 
 ```
