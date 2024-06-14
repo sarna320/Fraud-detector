@@ -38,8 +38,6 @@ class DetectLimitBreaches(ProcessWindowFunction):
                 yield transaction
 
         
-
-
 class DetectMovingAverageAnomalies(KeyedProcessFunction):
 
     def __init__(self):

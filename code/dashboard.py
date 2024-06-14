@@ -53,9 +53,8 @@ class TransactionMonitor:
         self.fig = plt.figure(figsize=(12, 10))
         gs = GridSpec(3, 1, height_ratios=[2, 2, 1])
 
-        self.ax1 = self.fig.add_subplot(gs[0])
         self.ax2 = self.fig.add_subplot(gs[1])
-        self.ax3 = self.fig.add_subplot(gs[2])
+
 
         self.colors = plt.cm.tab20(np.linspace(0, 1, 40))
 
@@ -75,62 +74,14 @@ class TransactionMonitor:
                 self.fraud_counts[message["anomaly"]] += 1
                 self.last_two_transactions.append(message)
 
-    def update_table(self):
-        last_five_transactions = list(self.last_two_transactions)[-5:]
-        table_data = [
-            [
-                txn["card_id"],
-                txn["user_id"],
-                f"{txn['transaction_value']:.2f}",
-                f"{txn['card_limit']:.2f}",
-                txn["timestamp"],
-                txn.get("anomaly", "N/A"),
-            ]
-            for txn in last_five_transactions
-        ]
-
-        self.ax3.clear()
-        self.ax3.axis("off")
-
-        table = self.ax3.table(
-            cellText=table_data,
-            colLabels=["Card ID", "User ID", "Value", "Limit", "Timestamp", "Anomaly"],
-            loc="center",
-            cellLoc="center",
-        )
-
-        for i, row in enumerate(table_data):
-            anomaly = row[5]
-            cell_color = "red" if anomaly != "N/A" else "green"
-            for j in range(len(row)):
-                table[(i + 1, j)].set_facecolor(cell_color)
-            for i, row in enumerate(table_data):
-                anomaly = row[5]
-                cell_color = "red" if anomaly != "N/A" else "green"
-                for j in range(len(row)):
-                    table[(i + 1, j)].set_facecolor(cell_color)
 
     def update_plots(self, _):
         self.process_messages()
 
-        self.ax1.clear()
         self.ax2.clear()
 
-        self.plot_counts(self.ax1, self.transaction_count, self.anomaly_count)
         self.plot_frauds(self.ax2)
 
-        self.update_table()
-
-    def plot_counts(self, ax, transaction_count, anomaly_count):
-        counts = [transaction_count, anomaly_count]
-        labels = ["Valid Transactions", "Anomalies"]
-
-        ax.bar(labels, counts, color=["blue", "red"])
-        ax.set_title("Transaction and Anomaly Counts")
-        ax.set_ylabel("Count")
-
-        for i, count in enumerate(counts):
-            ax.text(i, count + 0.5, str(count), ha="center")
 
     def plot_frauds(self, ax):
         fraud_types = list(self.fraud_counts.keys())
